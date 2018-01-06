@@ -40,7 +40,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         requestQueue = Volley.newRequestQueue(this); // This setups up a new request queue which we will need to make HTTP requests.
+
+        setLedState("");
     }
+
+
 
 //    private void getRepoList(String username) {
 //        // First we insert the username into the repo url
@@ -87,13 +91,14 @@ public class MainActivity extends AppCompatActivity {
 //        requestQueue.add(arrayRequest);
 //    }
 
-    private void setLedState(int led, int state) {
-        this.url = this.baseURL + "blinkt/" + led + "/" + state;
+    private void setLedState(String url) {
+        this.url = this.baseURL + "blinkt" + url;
+        Log.d("Volley", this.url);
 
         // Next we create a new JsonArrayRequest. This will use Volley to make an HTTP request
         // that expexts a JSON Array Response
         // To fully understand this read: https://developer.android.com/training/volley/index.html
-        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url,
+        final JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, this.url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -131,6 +136,6 @@ public class MainActivity extends AppCompatActivity {
         boolean state = s.isChecked();
         int ledState = 0;
         if (state) { ledState = 1; } // Could rather use Function interface
-        setLedState(led, ledState);
+        setLedState("/" + led + "/" + ledState);
     }
 }
