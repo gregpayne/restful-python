@@ -15,6 +15,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.colorpicker.shishank.colorpicker.ColorPicker;
+import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorSelectedListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     RequestQueue requestQueue;
 
+    ColorPickerView colorPicker;
+
     String baseURL = "http://192.168.0.160:5000/";
     String url;
 
@@ -46,10 +51,17 @@ public class MainActivity extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(this); // This setups up a new request queue which we will need to make HTTP requests.
 
+        colorPicker = (ColorPickerView) findViewById(R.id.colorPicker);
+        colorPicker.setAlpha(1.0f);
+        colorPicker.addOnColorSelectedListener(new OnColorSelectedListener() {
+            @Override
+            public void onColorSelected(int i) {
+                Log.d("Color Picker","Color: " + Integer.toHexString(i));
+            }
+        });
+
         setLedState("");
     }
-
-
 
 //    private void getRepoList(String username) {
 //        // First we insert the username into the repo url
@@ -148,6 +160,8 @@ public class MainActivity extends AppCompatActivity {
     public void testPut(View view) {
         String led = "1";
         String url = "http://192.168.0.160:5000/blinkt/" + led;
+        final String color = "#" + Integer.toHexString(colorPicker.getSelectedColor()).substring(2);
+        Log.d("Color Picker", "Color:" + color);
 
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
                 new Response.Listener<String>() {
@@ -167,8 +181,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("brightness", "0.75");
-                params.put("color", "#111111");
+                params.put("brightness", "0.2");
+                params.put("color", color);
                 params.put("state", "True");
                 return params;
             }

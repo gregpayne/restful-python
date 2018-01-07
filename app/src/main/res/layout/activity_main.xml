@@ -86,10 +86,32 @@
         app:layout_constraintTop_toBottomOf="@id/switch6"/>
 
     <Button
+        android:id="@+id/testButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/switch7"
         android:text="Test PUT"
         android:onClick="testPut"/>
+
+
+    <RelativeLayout
+        android:layout_width="251dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/switch0">
+
+        <com.flask.colorpicker.ColorPickerView
+            android:id="@+id/colorPicker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:alphaSlider="false"
+            app:density="12"
+            app:alpha="1"
+            app:lightnessSlider="false"
+            app:wheelType="FLOWER" />
+    </RelativeLayout>
+
 
 </android.support.constraint.ConstraintLayout>

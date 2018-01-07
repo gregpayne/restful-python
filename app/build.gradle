@@ -31,4 +31,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.mcxiaoke.volley:library:1.0.19'
+    implementation 'com.github.QuadFlask:colorpicker:0.0.13'
+    implementation 'com.github.shishanksingh2015:colorpicker:v1.0' //https://github.com/shishanksingh2015/colorpicker Good to remember as uses a background image to select the color
 }
