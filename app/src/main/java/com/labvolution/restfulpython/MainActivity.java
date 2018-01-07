@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     RequestQueue requestQueue;
 
     ColorPickerView colorPicker;
+    Switch switch0, switch1, switch2, switch3, switch4, switch5, switch6, switch7;
 
     String baseURL = "http://192.168.0.160:5000/";
     String url;
@@ -50,6 +51,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         requestQueue = Volley.newRequestQueue(this); // This setups up a new request queue which we will need to make HTTP requests.
+
+        switch0 = (Switch) findViewById(R.id.switch0);
+        switch1 = (Switch) findViewById(R.id.switch1);
+        switch2 = (Switch) findViewById(R.id.switch2);
+        switch3 = (Switch) findViewById(R.id.switch3);
+        switch4 = (Switch) findViewById(R.id.switch4);
+        switch5 = (Switch) findViewById(R.id.switch5);
+        switch6 = (Switch) findViewById(R.id.switch6);
+        switch7 = (Switch) findViewById(R.id.switch7);
 
         colorPicker = (ColorPickerView) findViewById(R.id.colorPicker);
         colorPicker.setAlpha(1.0f);
@@ -157,9 +167,11 @@ public class MainActivity extends AppCompatActivity {
         setLedState("/" + led + "/" + ledState);
     }
 
-    public void testPut(View view) {
-        String led = "1";
-        String url = "http://192.168.0.160:5000/blinkt/" + led;
+    public void setAll(View view) {
+        String url = "http://192.168.0.160:5000/blinkt/all";
+        Switch s = (Switch) view;
+        final boolean state = s.isChecked();
+
         final String color = "#" + Integer.toHexString(colorPicker.getSelectedColor()).substring(2);
         Log.d("Color Picker", "Color:" + color);
 
@@ -169,6 +181,14 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                             Log.d("Volley", response);
                         // TODO: 07/01/2018 Will need to parse response from String to JSONObject
+                        switch0.setChecked(state);
+                        switch1.setChecked(state);
+                        switch2.setChecked(state);
+                        switch3.setChecked(state);
+                        switch4.setChecked(state);
+                        switch5.setChecked(state);
+                        switch6.setChecked(state);
+                        switch7.setChecked(state);
                     }
                 },
                 new Response.ErrorListener() {
@@ -183,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("brightness", "0.2");
                 params.put("color", color);
-                params.put("state", "True");
+                params.put("state", Boolean.toString(state));
                 return params;
             }
 
