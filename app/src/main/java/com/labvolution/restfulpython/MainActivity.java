@@ -7,16 +7,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 // https://www.londonappdeveloper.com/consuming-a-json-rest-api-in-android/
 // https://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
@@ -127,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         );
         // Add the request we just defined to out request queue
         // The request queue will automatically handle the request as soon as it can
+        Log.d("Volley", jsonArrayRequest.toString());
         requestQueue.add(jsonArrayRequest);
     }
 
@@ -137,5 +143,44 @@ public class MainActivity extends AppCompatActivity {
         int ledState = 0;
         if (state) { ledState = 1; } // Could rather use Function interface
         setLedState("/" + led + "/" + ledState);
+    }
+
+    public void testPut(View view) {
+        String led = "1";
+        String url = "http://192.168.0.160:5000/blinkt/" + led;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                            Log.d("Volley", response);
+                        // TODO: 07/01/2018 Will need to parse response from String to JSONObject
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Volley", error.toString());
+                    }
+                })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("brightness", "0.75");
+                params.put("color", "#111111");
+                params.put("state", "True");
+                return params;
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        Log.d("Volley", stringRequest.getBodyContentType());
+        requestQueue.add(stringRequest);
     }
 }
