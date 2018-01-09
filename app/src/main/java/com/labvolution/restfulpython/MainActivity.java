@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     RequestQueue requestQueue;
 
     ColorPickerView colorPicker;
-    Switch switch0, switch1, switch2, switch3, switch4, switch5, switch6, switch7;
+    Switch[] toggleSwitch = new Switch[8];
 
     String baseURL = "http://192.168.0.160:5000/";
     String url;
@@ -52,14 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
         requestQueue = Volley.newRequestQueue(this); // This setups up a new request queue which we will need to make HTTP requests.
 
-        switch0 = (Switch) findViewById(R.id.switch0);
-        switch1 = (Switch) findViewById(R.id.switch1);
-        switch2 = (Switch) findViewById(R.id.switch2);
-        switch3 = (Switch) findViewById(R.id.switch3);
-        switch4 = (Switch) findViewById(R.id.switch4);
-        switch5 = (Switch) findViewById(R.id.switch5);
-        switch6 = (Switch) findViewById(R.id.switch6);
-        switch7 = (Switch) findViewById(R.id.switch7);
+        toggleSwitch[0] = (Switch) findViewById(R.id.switch0);
+        toggleSwitch[1] = (Switch) findViewById(R.id.switch1);
+        toggleSwitch[2] = (Switch) findViewById(R.id.switch2);
+        toggleSwitch[3] = (Switch) findViewById(R.id.switch3);
+        toggleSwitch[4] = (Switch) findViewById(R.id.switch4);
+        toggleSwitch[5] = (Switch) findViewById(R.id.switch5);
+        toggleSwitch[6] = (Switch) findViewById(R.id.switch6);
+        toggleSwitch[7] = (Switch) findViewById(R.id.switch7);
 
         colorPicker = (ColorPickerView) findViewById(R.id.colorPicker);
         colorPicker.setAlpha(1.0f);
@@ -179,16 +179,19 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                            Log.d("Volley", response);
-                        // TODO: 07/01/2018 Will need to parse response from String to JSONObject
-                        switch0.setChecked(state);
-                        switch1.setChecked(state);
-                        switch2.setChecked(state);
-                        switch3.setChecked(state);
-                        switch4.setChecked(state);
-                        switch5.setChecked(state);
-                        switch6.setChecked(state);
-                        switch7.setChecked(state);
+                        Log.d("Volley", response);
+
+                        try {
+                            JSONArray jsonArray = new JSONArray(response);
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                // Read the state from the response message to set the toggle switches
+                                toggleSwitch[i].setChecked(jsonArray.getJSONObject(i).getBoolean("state"));
+                            }
+
+                        } catch (JSONException e) {
+                            Log.e("Volley", "Invalid JSON Object.");
+                        }
                     }
                 },
                 new Response.ErrorListener() {
