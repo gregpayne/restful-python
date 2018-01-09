@@ -20,11 +20,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
@@ -32,5 +36,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.mcxiaoke.volley:library:1.0.19'
     implementation 'com.github.QuadFlask:colorpicker:0.0.13'
-    implementation 'com.github.shishanksingh2015:colorpicker:v1.0' //https://github.com/shishanksingh2015/colorpicker Good to remember as uses a background image to select the color
+    implementation 'com.github.shishanksingh2015:colorpicker:v1.0'
+    //https://github.com/shishanksingh2015/colorpicker Good to remember as uses a background image to select the color
 }
