@@ -17,6 +17,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.colorpicker.shishank.colorpicker.ColorPicker;
 import com.flask.colorpicker.ColorPickerView;
+import com.flask.colorpicker.OnColorChangedListener;
 import com.flask.colorpicker.OnColorSelectedListener;
 
 import org.json.JSONArray;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     ColorPickerView colorPicker;
     Switch[] toggleSwitch = new Switch[8];
+    Switch toggleAll;
 
     String baseURL = "http://192.168.0.160:5000/";
     String url;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         toggleSwitch[5] = (Switch) findViewById(R.id.switch5);
         toggleSwitch[6] = (Switch) findViewById(R.id.switch6);
         toggleSwitch[7] = (Switch) findViewById(R.id.switch7);
+        toggleAll = (Switch) findViewById(R.id.setAll);
 
         colorPicker = (ColorPickerView) findViewById(R.id.colorPicker);
         colorPicker.setAlpha(1.0f);
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onColorSelected(int i) {
                 Log.d("Color Picker","Color: " + Integer.toHexString(i));
+                updateLEDs();
             }
         });
 
@@ -168,9 +172,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setAll(View view) {
+        updateLEDs();
+    }
+
+    private void updateLEDs() {
         String url = "http://192.168.0.160:5000/blinkt/all";
-        Switch s = (Switch) view;
-        final boolean state = s.isChecked();
+        final boolean state = toggleAll.isChecked();
 
         final String color = "#" + Integer.toHexString(colorPicker.getSelectedColor()).substring(2);
         Log.d("Color Picker", "Color:" + color);
