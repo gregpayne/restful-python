@@ -48,8 +48,8 @@ public class Blinkt {
      * @param color String representation of the color. eg. '#FFFFFF'
      * @param state String representation of state in lower case. eg. 'true' or 'false'
      */
-    public void updateLEDs(UpdateUiEventListener eventListener, String url, String color, String state) {
-        Log.d(TAG, "URL: " + url);
+    public void updateLEDs(UpdateUiEventListener eventListener, String url, String color, String state, String brightness) {
+//        Log.d(TAG, "URL: " + url);
         ArrayList<Boolean> switchStates = new ArrayList<>();
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, this.baseURL + url,
                 (response) -> {
@@ -71,7 +71,7 @@ public class Blinkt {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> params = new HashMap<>();
-                    params.put("brightness", "0.2");
+                    params.put("brightness", brightness);
                     params.put("color", color);
                     params.put("state", state);
                     return params;

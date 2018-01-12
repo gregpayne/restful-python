@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Switch;
 
 import com.flask.colorpicker.ColorPickerView;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     ColorPickerView colorPicker;
     Switch[] toggleSwitch = new Switch[8];
     Switch toggleAll;
+    SeekBar blinktBrightnessSlider;
 
     String baseURL = "http://192.168.0.160:5000/";
 
@@ -40,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         blinkt = new Blinkt(this, this.baseURL);
+
+        blinktBrightnessSlider = (SeekBar) findViewById(R.id.blinktBrighnessSlider);
+        blinktBrightnessSlider.setProgress(50);
 
         toggleSwitch[0] = (Switch) findViewById(R.id.switch0);
         toggleSwitch[1] = (Switch) findViewById(R.id.switch1);
@@ -56,7 +61,19 @@ public class MainActivity extends AppCompatActivity {
         colorPicker.addOnColorSelectedListener((color) -> {
             Log.d("Color Picker", "Color: " + Integer.toHexString(color));
             blinkt.updateLEDs(this::updateBlinktSwitches,
-                    "/color", getCurrentColor(), ""); // state is not used by the REST API
+                    "/color", getCurrentColor(), "null", "null"); // state is not used by the REST API
+        });
+
+        blinktBrightnessSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(SeekBar seekBar, int i, boolean b) {}
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {
+                String brightness = calculateBrightness(seekBar.getProgress());
+                Log.d(TAG, "Seekbar positionL " + seekBar.getProgress() + " Brightness" + brightness);
+
+                blinkt.updateLEDs((arrayList) -> updateBlinktSwitches(arrayList), // Using a Lambda method reference
+                        "/brightness" + "", "null", "", brightness);
+            }
         });
     }
 
@@ -65,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         // Only want to the response to update the UI depending on the Switch position
         blinkt.updateLEDs(this::updateBlinktSwitches,
-                "/init", "", ""); // color and state can be blank as they are not queried
+                "/init", "null", "null", "null"); // color and state can be blank as they are not queried
     }
 
     /**
@@ -75,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     public void singleBlinktSwitchOnClick(View view) {
         // define callback method as part of the passed in parameters
         blinkt.updateLEDs(this::updateBlinktSwitches, // Using a Lambda method reference
-                "/" + getSwitchNumber(view), getCurrentColor(), getSwitchState(view));
+                "/" + getSwitchNumber(view), getCurrentColor(), getSwitchState(view), getBrightness(blinktBrightnessSlider));
     }
 
     /**
@@ -85,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     public void allBlinktSwitchOnClick(View view) {
         // define callback method as part of passed in parameters
         blinkt.updateLEDs((arrayList) -> updateBlinktSwitches(arrayList), // For Method Reference, see above method
-                "/all", getCurrentColor(), getSwitchState(view));
+                "/all", getCurrentColor(), getSwitchState(view), getBrightness(blinktBrightnessSlider));
     }
 
     /**
@@ -103,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
         toggleAll.setChecked(allOn);
     }
 
+    private String calculateBrightness(int seekbar) {
+        return Float.toString(Math.min(Math.max(seekbar, 1), 99) / 100.0f);
+    }
+
     private String getCurrentColor() {
         return "#" + Integer.toHexString(colorPicker.getSelectedColor()).substring(2);
     }
@@ -113,5 +134,9 @@ public class MainActivity extends AppCompatActivity {
 
     private Integer getSwitchNumber(View view) {
         return Integer.parseInt(((Switch) view).getText().toString());
+    }
+
+    private String getBrightness(View view) {
+        return Float.toString(((SeekBar) view).getProgress() / 100.0f);
     }
 }
