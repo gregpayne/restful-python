@@ -38,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        blinkt = new Blinkt(this, this.baseURL);
+
         toggleSwitch[0] = (Switch) findViewById(R.id.switch0);
         toggleSwitch[1] = (Switch) findViewById(R.id.switch1);
         toggleSwitch[2] = (Switch) findViewById(R.id.switch2);
@@ -52,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
         colorPicker.setAlpha(1.0f);
         colorPicker.addOnColorSelectedListener((color) -> {
             Log.d("Color Picker", "Color: " + Integer.toHexString(color));
+            blinkt.updateLEDs(this::updateBlinktSwitches,
+                    "/color", getCurrentColor(), ""); // state is not used by the REST API
         });
-
-        blinkt = new Blinkt(this, this.baseURL);
     }
 
     @Override
