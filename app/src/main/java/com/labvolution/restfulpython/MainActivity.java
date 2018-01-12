@@ -1,5 +1,6 @@
 package com.labvolution.restfulpython;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         toggleSwitch[0] = (Switch) findViewById(R.id.switch0);
         toggleSwitch[1] = (Switch) findViewById(R.id.switch1);
         toggleSwitch[2] = (Switch) findViewById(R.id.switch2);
