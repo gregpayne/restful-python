@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.flask.colorpicker.ColorPickerView;
 
@@ -81,8 +82,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // Only want to the response to update the UI depending on the Switch position
-        blinkt.updateLEDs(this::updateBlinktSwitches,
-                "/init", "null", "null", "null"); // color and state can be blank as they are not queried
+        blinkt.updateLEDs((arrayList -> {
+            updateBlinktSwitches(arrayList);
+            Toast.makeText(this, "Connected to Raspberry Pi", Toast.LENGTH_SHORT).show();
+        }), "/init", "null", "null", "null"); // color and state can be blank as they are not queried
     }
 
     /**

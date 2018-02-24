@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">RestfulPython</string>
+
+    <string name="blinkt0">"0"</string>
+    <string name="blinkt1">"1"</string>
+    <string name="blinkt2">"2"</string>
+    <string name="blinkt3">"3"</string>
+    <string name="blinkt4">"4"</string>
+    <string name="blinkt5">"5"</string>
+    <string name="blinkt6">"6"</string>
+    <string name="blinkt7">"7"</string>
+    <string name="blinktAll">"Set All"</string>
 </resources>
